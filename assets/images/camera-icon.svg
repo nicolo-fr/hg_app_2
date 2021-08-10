@@ -1,0 +1,11 @@
+<svg id="camera-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+  <circle id="Ellipse_34" data-name="Ellipse 34" cx="12" cy="12" r="12" fill="rgba(52,163,163,0.2)"/>
+  <g id="Group_159" data-name="Group 159" transform="translate(-74 -251)">
+    <path id="Subtraction_3" data-name="Subtraction 3" d="M-2805-5897h-12a2,2,0,0,1-2-2v-7a2,2,0,0,1,2-2h12a2,2,0,0,1,2,2v7A2,2,0,0,1-2805-5897Zm-6-9a3.5,3.5,0,0,0-3.5,3.5,3.5,3.5,0,0,0,3.5,3.5,3.5,3.5,0,0,0,3.5-3.5A3.5,3.5,0,0,0-2811-5906Z" transform="translate(2897 6166)" fill="#34a3a3"/>
+    <circle id="Ellipse_42" data-name="Ellipse 42" cx="2.5" cy="2.5" r="2.5" transform="translate(83.5 261)" fill="#34a3a3"/>
+    <g id="Path_131" data-name="Path 131" transform="translate(-2819 -5908)" fill="#34a3a3">
+      <path d="M 2907.79296875 6165.5 L 2902.20703125 6165.5 L 2903.20703125 6164.5 L 2906.79296875 6164.5 L 2907.79296875 6165.5 Z" stroke="none"/>
+      <path d="M 2903 6164 L 2907 6164 L 2909 6166 L 2901 6166 L 2903 6164 Z" stroke="none" fill="#34a3a3"/>
+    </g>
+  </g>
+</svg>
