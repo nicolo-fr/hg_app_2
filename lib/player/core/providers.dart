@@ -1,15 +1,16 @@
 import 'package:hg_app_2/player/application/app_audio_player_notifier.dart';
 import 'package:hg_app_2/player/domain/album.dart';
 import 'package:hg_app_2/player/domain/app_audio_player.dart';
+import 'package:hg_app_2/player/domain/progress.dart';
 import 'package:hg_app_2/player/infrastructure/repositories/album_repository.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:just_audio/just_audio.dart';
 
-final appAudioPlayerProvider = FutureProvider<AppAudioPlayer>(
-  (ref) async {
+final appAudioPlayerProvider = Provider<AppAudioPlayer>(
+  (ref) {
     const AppAudioPlayer appAudioPlayer = AppAudioPlayer();
 
-    await appAudioPlayer.player.setAudioSource(
+    appAudioPlayer.player.setAudioSource(
       ConcatenatingAudioSource(
         children: [
           AudioSource.uri(Uri.parse('asset:///assets/1.flac')),
@@ -48,8 +49,6 @@ final appAudioPlayerProvider = FutureProvider<AppAudioPlayer>(
       ),
     );
 
-    
-
     ref.onDispose(() {
       appAudioPlayer.player.dispose();
     });
@@ -65,40 +64,27 @@ final albumProvider =
 final appAudioPlayerNotifierProvider =
     StateNotifierProvider<AppAudioPlayerStateNotifier, AppAudioPlayerState>(
         (ref) {
-  AsyncValue<AppAudioPlayer> waitAppAudioPlayerProvider =
-      ref.watch(appAudioPlayerProvider);
-  AppAudioPlayer watchedAppAudioPlayerProvider = const AppAudioPlayer();
-  waitAppAudioPlayerProvider.when(
-      data: (value) => watchedAppAudioPlayerProvider = value,
-      loading: () {},
-      error: (o, s) {});
   return AppAudioPlayerStateNotifier(
-      watchedAppAudioPlayerProvider, ref.watch(albumProvider));
+      ref.watch(appAudioPlayerProvider), ref.watch(albumProvider));
 });
 
-// final appAudioPlayerNotifierProvider =
-//     StateNotifierProvider<AppAudioPlayerStateNotifier, AppAudioPlayerState>(
-//         (ref) {
-//   // final album = LocalAlbumRepository().fetchAlbum();
-//   return AppAudioPlayerStateNotifier(
-//       ref.watch(appAudioPlayerProvider), ref.watch(albumProvider));
-// });
+final appAudioPlayerDuration =
+    StreamProvider.autoDispose<Duration>((ref) async* {
+  final appAudioPlayer = ref.watch(appAudioPlayerProvider);
+  Duration _duration = Duration.zero;
 
+  await for (final value in appAudioPlayer.duration) {
+    if (value == null) {
+    } else {
+      yield value;
+    }
+  }
+});
 
-
-
-// final appAudioPlayerDuration =
-//     StreamProvider.autoDispose<Duration?>((ref) async* {
-//   final appAudioPlayer = ref.watch(appAudioPlayerProvider);
-//   await for (final value in appAudioPlayer.player.durationStream) {
-//     yield value;
-//   }
-// });
-
-// final appAudioPlayerPosition =
-//     StreamProvider.autoDispose<Duration?>((ref) async* {
-//   final appAudioPlayer = ref.watch(appAudioPlayerProvider);
-//   await for (final value in appAudioPlayer.player.positionStream) {
-//     yield value;
-//   }
-// });
+final appAudioPlayerPosition =
+    StreamProvider.autoDispose<Duration>((ref) async* {
+  final appAudioPlayer = ref.watch(appAudioPlayerProvider);
+  await for (final value in appAudioPlayer.position) {
+    yield value;
+  }
+});

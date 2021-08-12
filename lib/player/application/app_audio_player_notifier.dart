@@ -79,8 +79,11 @@ class AppAudioPlayerStateNotifier extends StateNotifier<AppAudioPlayerState> {
 
   //TODO implement playfromstart
   Future<void> playFromStart(Track track, BuildContext context) async {
+    appAudioPlayer.player.seek(Duration.zero);
     // await appAudioPlayer.seekTrack(track);
-    return;
+    // appAudioPlayer.play();
   }
+
+  
 }
 
