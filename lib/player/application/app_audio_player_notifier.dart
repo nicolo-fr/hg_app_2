@@ -4,8 +4,10 @@ import 'package:hg_app_2/core/routes/app_router.gr.dart';
 import 'package:hg_app_2/player/domain/album.dart';
 import 'package:hg_app_2/player/domain/app_audio_player.dart';
 import 'package:hg_app_2/player/domain/track.dart';
+import 'package:hg_app_2/player/infrastructure/data/track_2.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:auto_route/auto_route.dart';
+import 'package:just_audio/just_audio.dart';
 
 part 'app_audio_player_notifier.freezed.dart';
 
@@ -28,190 +30,57 @@ class AppAudioPlayerStateNotifier extends StateNotifier<AppAudioPlayerState> {
   final Album album;
 
   Future<void> play(Track track, BuildContext context) async {
-    final bool _isAlbumLastTrack = album.isLastTrack(track);
-    // Stream<void> _onPlayerCompletion =
-    //     appAudioPlayer.audioPlayer.onPlayerCompletion;
-
-    print(
-        '                  PLAY FUNCTION CALLED with trackPath: ${track.trackPath}, last track ? ${_isAlbumLastTrack}');
+    final bool _isSameTrack =
+        appAudioPlayer.player.currentIndex == track.trackNumber - 1;
 
     try {
-      await appAudioPlayer.audioCache.play(track.trackPath);
-      print(
-          'loaded files playing: ${appAudioPlayer.audioCache.loadedFiles.toString()}');
-
+      if (!_isSameTrack) {
+        await appAudioPlayer.seekTrack(track);
+      }
+      appAudioPlayer.play();
       state = AppAudioPlayerState.playing(track);
-      print(state.toString());
-    } catch (e) {}
 
-    if (_isAlbumLastTrack == false) {
-      print('if function called: _isAlbumLastTrack == false');
-
-      Track _nextTrack = album.fetchNextTrack(track);
-      print('_nextTrack: ${_nextTrack}');
-
-      await appAudioPlayer.audioCache.load('${_nextTrack.trackPath}');
-      print(
-          'loaded files pre-loading: ${appAudioPlayer.audioCache.loadedFiles.toString()}');
-
-      appAudioPlayer.playerCompletionEvent.listen(
-        (event) async {
-          await appAudioPlayer.audioPlayer.stop();
-          await appAudioPlayer.audioCache.clearAll();
-
-          print(
-              'Has cleared cache ? loaded files : ${appAudioPlayer.audioCache.loadedFiles.toString()}');
-          print(
-              '-----------------END----NEXT TRACK WILL FOLLOW------------------');
-
-          await play(_nextTrack, context);
-
-          // _onPlayerCompletion.listen((event) {
-          //   appAudioPlayer.audioPlayer.stop().then(
-          //     (value) {
-          //       print('audioplayer stopped');
-          //       return appAudioPlayer.audioCache.clearAll().then((value) {
-          //         print('cache cleared?');
-          //         print(
-          //             'loaded files cleared: ${appAudioPlayer.audioCache.loadedFiles.toString()}');
-          //         return play(_nextTrack, context);
-          //       });
-          //     },
-          //   );
-          // print('player  completed _isAlbumLastTrack == false');
-          // print('loaded files initial: ${appAudioPlayer.audioCache.loadedFiles.toString()}');
-          // await appAudioPlayer.audioPlayer.stop();
-          // print('loaded files stopped: ${appAudioPlayer.audioCache.loadedFiles.toString()}');
-          // appAudioPlayer.audioCache.clearAll();
-          // print('loaded files cleared: ${appAudioPlayer.audioCache.loadedFiles.toString()}');
-          // print('----------------------------------');
-          // await play(_nextTrack, context);
-
-          // if (context.router.current.path == '/track-page' ||
-          //     context.router.current.path == '/track-more-info-page') {
-          //   context.router.replace(TrackPageRoute(track: _nextTrack));
-          // }
-        },
-        onError: (Object e) {
-          print('an error occured: ${e.toString()}');
-
+      appAudioPlayer.currentIndexStream.listen(
+        (index) {
+          var newTrack = album.fetchTrackAtIndex(index);
+          state = AppAudioPlayerState.playing(newTrack);
+          print(state);
+          if (context.router.current.path == '/track-page' ||
+              context.router.current.path == '/track-more-info-page') {
+            context.router.replace(TrackPageRoute(track: newTrack));
+          }
         },
       );
-    } else if (_isAlbumLastTrack == true) {
-      print('if function called: _isAlbumLastTrack == true');
-      appAudioPlayer.playerCompletionEvent.listen(
-        (event) {
-          try {
-            print('player completed _isAlbumLastTrack == true');
-            var playerStopped = appAudioPlayer.audioPlayer.stop();
-            state = const AppAudioPlayerState.stopped();
 
-            // var result2 = appAudioPlayer.audioPlayer.stop();
-            // print(result2);
-
-            // // appAudioPlayer.audioCache.clearAll();
-            // print('audioplayer stopped.');
-            // state = const AppAudioPlayerState.stopped();
-            // print(state.toString());
-            // state = AppAudioPlayerState.initial(album.fetchTrack(1));
-            // print(state.toString());
-          } catch (e) {}
-        },
-      );
+      appAudioPlayer.player.playerStateStream.listen((playerState) async { 
+        if (playerState.processingState == ProcessingState.completed) {
+          await appAudioPlayer.player.stop();
+          state = const AppAudioPlayerState.stopped();
+          // await appAudioPlayer.seekTrack(album.fetchTrackAtIndex(0));
+          print(state);
+          print(appAudioPlayer.player.currentIndex);
+        }
+      });
+    } on PlayerException catch (e) {
+      print("Error code: ${e.code}");
+      print("Error message: ${e.message}");
+    } on PlayerInterruptedException catch (e) {
+      print("Connection aborted: ${e.message}");
+    } catch (e) {
+      print(e);
     }
-
-    appAudioPlayer.audioPlayer.onPlayerError.listen((msg) {
-      print('audioPlayer error : $msg');
-    });
   }
 
   Future<void> pause(Track track) async {
-    appAudioPlayer.audioPlayer.pause();
+    await appAudioPlayer.player.pause();
     state = AppAudioPlayerState.paused(track);
+    print(state);
   }
 
+  //TODO implement playfromstart
   Future<void> playFromStart(Track track, BuildContext context) async {
-    await appAudioPlayer.audioPlayer.stop();
-    play(track, context);
+    // await appAudioPlayer.seekTrack(track);
+    return;
   }
 }
 
-// class AppAudioPlayerStateNotifier extends StateNotifier<AppAudioPlayerState> {
-//   AppAudioPlayerStateNotifier(this.appAudioPlayer, this.album)
-//       : super(AppAudioPlayerState.initial(album.fetchTrack(1)));
-
-//   final AppAudioPlayer appAudioPlayer;
-//   final Album album;
-
-//   Future<void> play(Track track, BuildContext context) async {
-//     print('play function called with trackPath: ${track.trackPath}');
-//     final bool _isAlbumLastTrack = album.isLastTrack(track);
-//     print('isAlbumLastTrack: ${_isAlbumLastTrack}');
-//     final _onPlayerCompletion = appAudioPlayer.audioPlayer.onPlayerCompletion;
-
-    
-
-//     try {
-//       state = AppAudioPlayerState.playing(track);
-//       var result = await appAudioPlayer.audioCache.play(track.trackPath);
-//       print(state.toString());
-//       print(result);
-//     } catch (e) {
-//       throw UnimplementedError();
-//     }
-
-//     if (_isAlbumLastTrack == false) {
-//       print('if function called: _isAlbumLastTrack == false');
-//       final _nextTrack = album.fetchNextTrack(track);
-//       appAudioPlayer.audioCache.load('${_nextTrack.trackPath}');
-//       print('_nextTrack: ${_nextTrack}');
-//       _onPlayerCompletion.listen(
-//         (event) async {
-//           try {
-//             print('player  completed');
-//             await play(_nextTrack, context);
-            
-//             // state = AppAudioPlayerState.playing(_nextTrack);
-//             if (context.router.current.path == '/track-page' ||
-//                 context.router.current.path == '/track-more-info-page') {
-//               context.router.replace(TrackPageRoute(track: _nextTrack));
-//             }
-//           } catch (e) {}
-//         },
-//       );
-//     } else if (_isAlbumLastTrack == true) {
-//       print('if function called: _isAlbumLastTrack == true');
-//       _onPlayerCompletion.listen(
-//         (event) async {
-//           try {
-//             var result2 = await appAudioPlayer.audioPlayer.stop();
-//             print(result2);
-            
-//             // appAudioPlayer.audioCache.clearAll();
-//             print('audioplayer stopped.');
-//             state = const AppAudioPlayerState.stopped();
-//             print(state.toString());
-//             state = AppAudioPlayerState.initial(album.fetchTrack(1));
-//             print(state.toString());
-//           } catch (e) {}
-
-//           // state = const AppAudioPlayerState.stopped();
-//         },
-//       );
-//     }
-
-//     appAudioPlayer.audioPlayer.onPlayerError.listen((msg) {
-//       print('audioPlayer error : $msg');
-//     });
-//   }
-
-//   Future<void> pause(Track track) async {
-//     appAudioPlayer.audioPlayer.pause();
-//     state = AppAudioPlayerState.paused(track);
-//   }
-
-//   Future<void> playFromStart(Track track, BuildContext context) async {
-//     await appAudioPlayer.audioPlayer.stop();
-//     play(track, context);
-//   }
-// }

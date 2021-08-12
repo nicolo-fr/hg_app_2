@@ -26,6 +26,10 @@ class Album with _$Album {
     return tracks[trackNumber - 1];
   }
 
+  Track fetchTrackAtIndex(int? index) {
+    return tracks.firstWhere((track) => track.trackNumber == index !+ 1 ) ; 
+  }
+
   bool isLastTrack(Track track) {
     final lastTrack = tracks[tracks.length - 1];
     return lastTrack == track;

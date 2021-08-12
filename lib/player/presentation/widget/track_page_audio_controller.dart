@@ -110,11 +110,11 @@ class TrackPageAudioController extends ConsumerWidget {
           ),
           TrackPageInfoDisplay(track: track),
           const SizedBox(height: 24),
-          PositionIndicator(
-            width: MediaQuery.of(context).size.width,
-            height: 8,
-            color: Theme.of(context).accentColor,
-          ),
+          // PositionIndicator(
+          //   width: MediaQuery.of(context).size.width,
+          //   height: 8,
+          //   color: Theme.of(context).accentColor,
+          // ),
         ],
       ),
     );

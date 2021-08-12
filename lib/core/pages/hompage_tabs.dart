@@ -50,7 +50,7 @@ class _TabScreenState extends State<TabScreen> {
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          const BottomStickyPlayer(),
+          // const BottomStickyPlayer(),
           BottomNavigationBar(
             backgroundColor: Theme.of(context).primaryColor,
             onTap: _selectPage,
