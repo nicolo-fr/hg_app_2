@@ -84,6 +84,18 @@ class BottomStickyPlayer extends ConsumerWidget {
       );
     }
 
+    // Widget getPositionIndicator() {
+    //   return appAudioPlayerStateProvider.maybeWhen(
+    //     initial: (track) => Container(),
+    //     stopped: () => Container(),
+    //     orElse: () => PositionIndicator(
+    //       width: deviceData.width - imagePreviewWidth,
+    //       height: imagePreviewHeight,
+    //       color: Theme.of(context).accentColor.withOpacity(0.25),
+    //     ),
+    //   );
+    // }
+
     return GestureDetector(
       onTap: navigateToTrackPage(),
       child: Container(
@@ -146,14 +158,12 @@ class ImagePreview extends ConsumerWidget {
         child: FittedBox(
           fit: BoxFit.cover,
           child: Image.asset(
-            
             appAudioPlayerStateProvider.maybeWhen(
               initial: (track) => track.imagePath,
               playing: (track) => track.imagePath,
               paused: (track) => track.imagePath,
               orElse: () =>
                   appAudioPlayerNotifProvider.album.tracks[0].imagePath,
-                  
             ),
             errorBuilder: (ctx, error, strackTrace) {
               return Image.asset('assets/images/1.jpeg');

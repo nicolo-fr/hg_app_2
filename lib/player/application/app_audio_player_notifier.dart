@@ -44,7 +44,6 @@ class AppAudioPlayerStateNotifier extends StateNotifier<AppAudioPlayerState> {
         (index) {
           var newTrack = album.fetchTrackAtIndex(index);
           state = AppAudioPlayerState.playing(newTrack);
-          print(state);
           if (context.router.current.path == '/track-page' ||
               context.router.current.path == '/track-more-info-page') {
             context.router.replace(TrackPageRoute(track: newTrack));
@@ -53,9 +52,12 @@ class AppAudioPlayerStateNotifier extends StateNotifier<AppAudioPlayerState> {
       );
 
       appAudioPlayer.player.playerStateStream.listen((playerState) async { 
+        print(playerState);
         if (playerState.processingState == ProcessingState.completed) {
           await appAudioPlayer.player.stop();
           state = const AppAudioPlayerState.stopped();
+          print(state);
+          state = AppAudioPlayerState.initial(album.fetchTrack(1));
           // await appAudioPlayer.seekTrack(album.fetchTrackAtIndex(0));
           print(state);
           print(appAudioPlayer.player.currentIndex);

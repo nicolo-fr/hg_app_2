@@ -1,10 +1,10 @@
 import 'package:hg_app_2/player/application/app_audio_player_notifier.dart';
 import 'package:hg_app_2/player/domain/album.dart';
 import 'package:hg_app_2/player/domain/app_audio_player.dart';
-import 'package:hg_app_2/player/domain/progress.dart';
 import 'package:hg_app_2/player/infrastructure/repositories/album_repository.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:just_audio_background/just_audio_background.dart';
 
 final appAudioPlayerProvider = Provider<AppAudioPlayer>(
   (ref) {
@@ -13,9 +13,27 @@ final appAudioPlayerProvider = Provider<AppAudioPlayer>(
     appAudioPlayer.player.setAudioSource(
       ConcatenatingAudioSource(
         children: [
-          AudioSource.uri(Uri.parse('asset:///assets/1.flac')),
-          AudioSource.uri(Uri.parse('asset:///assets/2.flac')),
-          AudioSource.uri(Uri.parse('asset:///assets/3.flac')),
+          AudioSource.uri(
+            Uri.parse('asset:///assets/1.flac'),
+            tag: MediaItem(
+              id: '1',
+              album: "Hansel & Gretel",
+              title: "1",
+              artUri: Uri.parse('asset:///assets/images/1.jpeg'),
+            ),
+          ),
+          AudioSource.uri(Uri.parse('asset:///assets/2.flac'), tag: MediaItem(
+              id: '2',
+              album: "Hansel & Gretel",
+              title: "2",
+              artUri: Uri.parse('asset:///assets/images/2.jpeg'),
+            ),),
+          AudioSource.uri(Uri.parse('asset:///assets/3.flac'), tag: MediaItem(
+              id: '3',
+              album: "Hansel & Gretel",
+              title: "3",
+              artUri: Uri.parse('asset:///assets/images/3.jpeg'),
+            ),),
           AudioSource.uri(Uri.parse('asset:///assets/4.flac')),
           AudioSource.uri(Uri.parse('asset:///assets/5.flac')),
           AudioSource.uri(Uri.parse('asset:///assets/6.flac')),
