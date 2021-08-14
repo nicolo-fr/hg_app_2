@@ -27,28 +27,29 @@ class PositionIndicator extends ConsumerWidget {
           data: (data) => data.value,
           orElse: () => const Duration(),
         );
-    final double musicDurationIndicator = (width * position.inSeconds.toDouble()) /
+    final double _positionIndicatorWidth = (width * position.inSeconds.toDouble()) /
         duration.inSeconds.toDouble();
+    final _positionIndicatorPlaceholder = Container(height: height,);
 
     // ignore: sized_box_for_whitespace
-    final Widget indicatorWidget = Container(
+    final Widget _positionIndicator = Container(
       width: width,
       height: height,
       child: Row(
         children: [
           Container(
             color: color,
-            width: musicDurationIndicator.isNaN ? 0.1 : musicDurationIndicator,
+            width: _positionIndicatorWidth.isNaN ? 0.1 : _positionIndicatorWidth,
             height: height,
           ),
         ],
       ),
     );
-
+    
     final Widget indicatorDisplay = appAudioPlayerStateProvider.maybeWhen(
-      initial: (track) => Container(),
-      stopped: () => Container(),
-      orElse: () => indicatorWidget,
+      initial: (track) => _positionIndicatorPlaceholder,
+      stopped: () => _positionIndicatorPlaceholder,
+      orElse: () => _positionIndicator,
     );
     return indicatorDisplay;
   }
