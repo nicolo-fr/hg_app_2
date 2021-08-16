@@ -44,23 +44,21 @@ class TrackPageAudioController extends ConsumerWidget {
               GestureDetector(
                 onDoubleTap: () {
                   if (track != albumPrvdr.fetchTrack(1)) {
-                  appRouter.replace(
-                    TrackPageRoute(
-                      track: albumPrvdr.fetchPreviousTrack(track),
-                    ),
-                  );
-                    appAudioPlayerNotifProvider
-                          .play(albumPrvdr.fetchPreviousTrack(track), context);
+                    final previousTrack = albumPrvdr.fetchPreviousTrack(track);
+                    appRouter.replace(
+                      TrackPageRoute(
+                        track: previousTrack,
+                      ),
+                    );
+                    appAudioPlayerNotifProvider.play(previousTrack, context);
                   }
                 },
-                
                 child: IconButton(
                   splashRadius: 1,
                   iconSize: 40.0,
                   color: Colors.white,
                   onPressed: () {
-                    appAudioPlayerNotifProvider
-                          .playFromStart(track, context);
+                    appAudioPlayerNotifProvider.playFromStart(track, context);
                   },
                   icon: const Icon(
                     Icons.skip_previous,
@@ -93,13 +91,13 @@ class TrackPageAudioController extends ConsumerWidget {
                 color: Colors.white,
                 onPressed: () {
                   if (!albumPrvdr.isLastTrack(track)) {
+                    final nextTrack = albumPrvdr.fetchNextTrack(track);
                     appRouter.replace(
                       TrackPageRoute(
-                        track: albumPrvdr.fetchNextTrack(track),
+                        track: nextTrack,
                       ),
                     );
-                    appAudioPlayerNotifProvider
-                          .play(albumPrvdr.fetchNextTrack(track), context);
+                    appAudioPlayerNotifProvider.play(nextTrack, context);
                   }
                 },
                 icon: const Icon(

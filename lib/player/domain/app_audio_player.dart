@@ -32,6 +32,15 @@ class AppAudioPlayer with _$AppAudioPlayer {
   Future<void> play() {
     return _audioPlayer.play();
   }
+  Future<void> pause() {
+    return _audioPlayer.pause();
+  }
+  Future<void> playNext() {
+    return _audioPlayer.seekToNext();
+  }
+  Future<void> playPrevious() {
+    return _audioPlayer.seekToPrevious();
+  }
 }
 
 

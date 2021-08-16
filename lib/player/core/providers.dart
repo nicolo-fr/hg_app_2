@@ -1,69 +1,42 @@
+import 'package:audio_service/audio_service.dart';
 import 'package:hg_app_2/player/application/app_audio_player_notifier.dart';
 import 'package:hg_app_2/player/domain/album.dart';
 import 'package:hg_app_2/player/domain/app_audio_player.dart';
+import 'package:hg_app_2/player/domain/app_audio_handler.dart';
+import 'package:hg_app_2/player/domain/track.dart';
 import 'package:hg_app_2/player/infrastructure/repositories/album_repository.dart';
+import 'package:hg_app_2/plus/presentation/pages/acknowledgements_page.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:just_audio/just_audio.dart';
-import 'package:just_audio_background/just_audio_background.dart';
+
+final albumProvider = Provider<Album>(
+  (ref) {
+    Album album = LocalAlbumRepository().fetchAlbum();
+    return album;
+  },
+);
 
 final appAudioPlayerProvider = Provider<AppAudioPlayer>(
   (ref) {
     const AppAudioPlayer appAudioPlayer = AppAudioPlayer();
 
+    final album = ref.watch(albumProvider);
+
+    final audioSources = album.tracks.map((track) {
+      return AudioSource.uri(
+        Uri.parse('asset:///assets/${track.trackPath}'),
+        tag: MediaItem(
+          id: track.trackNumber.toString(),
+          title: track.titleFR,
+          artUri: Uri.parse('asset:///assets/images/${track.imagePath}'),
+          album: 'Hänsel & Gretel',
+        ),
+      );
+    }).toList();
+
     appAudioPlayer.player.setAudioSource(
       ConcatenatingAudioSource(
-        children: [
-          AudioSource.uri(
-            Uri.parse('asset:///assets/1.flac'),
-            tag: MediaItem(
-              id: '1',
-              album: "Hansel & Gretel",
-              title: "1",
-              artUri: Uri.parse('asset:///assets/images/1.jpeg'),
-            ),
-          ),
-          AudioSource.uri(Uri.parse('asset:///assets/2.flac'), tag: MediaItem(
-              id: '2',
-              album: "Hansel & Gretel",
-              title: "2",
-              artUri: Uri.parse('asset:///assets/images/2.jpeg'),
-            ),),
-          AudioSource.uri(Uri.parse('asset:///assets/3.flac'), tag: MediaItem(
-              id: '3',
-              album: "Hansel & Gretel",
-              title: "3",
-              artUri: Uri.parse('asset:///assets/images/3.jpeg'),
-            ),),
-          AudioSource.uri(Uri.parse('asset:///assets/4.flac')),
-          AudioSource.uri(Uri.parse('asset:///assets/5.flac')),
-          AudioSource.uri(Uri.parse('asset:///assets/6.flac')),
-          AudioSource.uri(Uri.parse('asset:///assets/7.flac')),
-          AudioSource.uri(Uri.parse('asset:///assets/8.flac')),
-          AudioSource.uri(Uri.parse('asset:///assets/9.flac')),
-          AudioSource.uri(Uri.parse('asset:///assets/10.flac')),
-          AudioSource.uri(Uri.parse('asset:///assets/11.flac')),
-          AudioSource.uri(Uri.parse('asset:///assets/12.flac')),
-          AudioSource.uri(Uri.parse('asset:///assets/13.flac')),
-          AudioSource.uri(Uri.parse('asset:///assets/14.flac')),
-          AudioSource.uri(Uri.parse('asset:///assets/15.flac')),
-          AudioSource.uri(Uri.parse('asset:///assets/16.flac')),
-          AudioSource.uri(Uri.parse('asset:///assets/17.flac')),
-          AudioSource.uri(Uri.parse('asset:///assets/18.flac')),
-          AudioSource.uri(Uri.parse('asset:///assets/19.flac')),
-          AudioSource.uri(Uri.parse('asset:///assets/20.flac')),
-          AudioSource.uri(Uri.parse('asset:///assets/21.flac')),
-          AudioSource.uri(Uri.parse('asset:///assets/22.flac')),
-          AudioSource.uri(Uri.parse('asset:///assets/23.flac')),
-          AudioSource.uri(Uri.parse('asset:///assets/24.flac')),
-          AudioSource.uri(Uri.parse('asset:///assets/25.flac')),
-          AudioSource.uri(Uri.parse('asset:///assets/26.flac')),
-          AudioSource.uri(Uri.parse('asset:///assets/27.flac')),
-          AudioSource.uri(Uri.parse('asset:///assets/28.flac')),
-          AudioSource.uri(Uri.parse('asset:///assets/29.flac')),
-          AudioSource.uri(Uri.parse('asset:///assets/30.flac')),
-          AudioSource.uri(Uri.parse('asset:///assets/31.flac')),
-          AudioSource.uri(Uri.parse('asset:///assets/32.flac')),
-        ],
+        children: [...audioSources],
       ),
     );
 
@@ -75,21 +48,79 @@ final appAudioPlayerProvider = Provider<AppAudioPlayer>(
   },
 );
 
-final albumProvider =
-    Provider<Album>((ref) => LocalAlbumRepository().fetchAlbum());
+final appAudioHandlerProvider = FutureProvider<AppAudioHandler>((ref) async {
+  final AppAudioHandler _appAudioHandler =
+      await initAudioService(ref.watch(appAudioPlayerProvider));
+  final album = ref.watch(albumProvider);
+
+  final mediaItems = album.tracks.map((track) {
+    return MediaItem(
+      id: track.trackNumber.toString(),
+      title: track.titleFR,
+      artUri: Uri.parse('asset:///assets/images/${track.imagePath}'),
+      album: 'Hänsel & Gretel',
+    );
+  }).toList();
+
+  _appAudioHandler.addQueueItems(mediaItems);
+  _appAudioHandler.notifyAudioHandlerAboutPlaybackEvents();
+  _appAudioHandler.listenForDurationChanges();
+  _appAudioHandler.listenForCurrentSongIndexChanges();
+
+  // void _listenToPlaybackState() {
+  //   _appAudioHandler.playbackState.listen((playbackState) {
+  //     final isPlaying = playbackState.playing;
+  //     final processingState = playbackState.processingState;
+  //     if (processingState == AudioProcessingState.loading ||
+  //         processingState == AudioProcessingState.buffering) {
+  //       playButtonNotifier.value = ButtonState.loading;
+  //     } else if (!isPlaying) {
+  //       playButtonNotifier.value = ButtonState.paused;
+  //     } else if (processingState != AudioProcessingState.completed) {
+  //       playButtonNotifier.value = ButtonState.playing;
+  //     } else {
+  //       _audioHandler.seek(Duration.zero);
+  //       _audioHandler.pause();
+  //     }
+  //   });
+  // }
+
+  ref.onDispose(() {
+    _appAudioHandler.stop();
+  });
+
+  return _appAudioHandler;
+});
 
 // ignore: top_level_function_literal_block
 final appAudioPlayerNotifierProvider =
     StateNotifierProvider<AppAudioPlayerStateNotifier, AppAudioPlayerState>(
         (ref) {
-  return AppAudioPlayerStateNotifier(
-      ref.watch(appAudioPlayerProvider), ref.watch(albumProvider));
+  var appAudioPlayer = ref.watch(appAudioPlayerProvider);
+  var album = ref.watch(albumProvider);
+  var appAudioHandler = ref.watch(appAudioHandlerProvider).data?.value;
+  AppAudioPlayerStateNotifier appAudioPlayerStateNotifier =
+      AppAudioPlayerStateNotifier(
+          appAudioPlayer: appAudioPlayer,
+          album: album,
+          appAudioHandler: appAudioHandler);
+
+  appAudioPlayer.player.playbackEventStream.listen((PlaybackEvent event) {
+    int trackNbr = appAudioPlayer.trackNumberPlaying;
+    if (appAudioPlayer.isPlaying) {
+      appAudioPlayerStateNotifier.setStateToPlay(album.fetchTrack(trackNbr));
+    }
+    if (!appAudioPlayer.isPlaying) {
+      appAudioPlayerStateNotifier.setStateToPaused(album.fetchTrack(trackNbr));
+    }
+  });
+
+  return appAudioPlayerStateNotifier;
 });
 
 final appAudioPlayerDuration =
     StreamProvider.autoDispose<Duration>((ref) async* {
   final appAudioPlayer = ref.watch(appAudioPlayerProvider);
-  Duration _duration = Duration.zero;
 
   await for (final value in appAudioPlayer.duration) {
     if (value == null) {

@@ -37,7 +37,7 @@ packages:
     source: hosted
     version: "2.6.1"
   audio_service:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: audio_service
       url: "https://pub.dartlang.org"
@@ -489,13 +489,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.9.5"
-  just_audio_background:
-    dependency: "direct main"
-    description:
-      name: just_audio_background
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.0.1-beta.1"
   just_audio_platform_interface:
     dependency: transitive
     description:
