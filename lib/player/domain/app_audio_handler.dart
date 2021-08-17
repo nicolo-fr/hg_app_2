@@ -63,6 +63,13 @@ Future<void> addQueueItems(List<MediaItem> mediaItems) async {
   queue.add(newQueue);
 }
 
+@override
+Future<void> skipToQueueItem(int index) async {
+  if (index < 0 || index >= queue.value.length) return;
+  
+  appAudioPlayer.player.seek(Duration.zero, index: index);
+}
+
   void listenForDurationChanges() {
     appAudioPlayer.player.durationStream.listen((duration) {
       final index = appAudioPlayer.player.currentIndex;

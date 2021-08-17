@@ -64,9 +64,10 @@ class AppAudioPlayerStateNotifier extends StateNotifier<AppAudioPlayerState> {
         appAudioPlayer.player.currentIndex == track.trackNumber - 1;
 
     try {
-      // if (!_isSameTrack) {
-      //   await appAudioPlayer.seekTrack(track);
-      // }
+      if (!_isSameTrack) {
+        appAudioHandler?.skipToQueueItem(track.trackNumber - 1);
+        // await appAudioPlayer.seekTrack(track);
+      }
       appAudioHandler?.play();
       // appAudioPlayer.play();
       // state = AppAudioPlayerState.playing(track);
