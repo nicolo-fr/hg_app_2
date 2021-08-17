@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hg_app_2/core/routes/app_router.dart';
 import 'package:hg_app_2/player/core/providers.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -27,8 +28,19 @@ class PositionIndicator extends ConsumerWidget {
           data: (data) => data.value,
           orElse: () => const Duration(),
         );
-    final double _positionIndicatorWidth = (width * position.inSeconds.toDouble()) /
-        duration.inSeconds.toDouble();
+
+    double getPositionIndicatorWidth() {
+      var positionToDuration = position.inSeconds.toDouble() / duration.inSeconds.toDouble();
+      if (positionToDuration.isNaN) {
+        return 0.1;
+      }
+      if (positionToDuration >= 1) {
+        positionToDuration = 1;
+        return positionToDuration * width;
+      }
+      return positionToDuration * width;
+    }
+
     final _positionIndicatorPlaceholder = Container(height: height,);
 
     // ignore: sized_box_for_whitespace
@@ -39,7 +51,7 @@ class PositionIndicator extends ConsumerWidget {
         children: [
           Container(
             color: color,
-            width: _positionIndicatorWidth.isNaN ? 0.1 : _positionIndicatorWidth,
+            width: getPositionIndicatorWidth(),
             height: height,
           ),
         ],

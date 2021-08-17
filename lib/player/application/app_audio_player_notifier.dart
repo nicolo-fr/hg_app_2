@@ -34,19 +34,6 @@ class AppAudioPlayerStateNotifier extends StateNotifier<AppAudioPlayerState> {
 
   final Album album;
 
-
-  void playPauseState() {
-    bool _isPlaying = appAudioPlayer.isPlaying;
-    int? _currentIndex;
-     appAudioPlayer.currentIndexStream.listen((index) { _currentIndex = index; });
-    if (_isPlaying) {
-      state = AppAudioPlayerState.playing(album.fetchTrackAtIndex(_currentIndex));
-    }
-    if (!_isPlaying) {
-      state = AppAudioPlayerState.paused(album.fetchTrackAtIndex(_currentIndex));
-    }
-  }
-
   void setStateToPlay(Track track) {
     state = AppAudioPlayerState.playing(track);
     print('setStateToPlay state: $state');
@@ -54,6 +41,10 @@ class AppAudioPlayerStateNotifier extends StateNotifier<AppAudioPlayerState> {
   void setStateToPaused(Track track) {
     state = AppAudioPlayerState.paused(track);
     print('setStateToPause state: $state');
+  }
+  void setStateToInitial() {
+    state = AppAudioPlayerState.paused(album.fetchTrack(1));
+    print('setStateToPause state: ${album.fetchTrack(1)}');
   }
 
  
@@ -66,16 +57,12 @@ class AppAudioPlayerStateNotifier extends StateNotifier<AppAudioPlayerState> {
     try {
       if (!_isSameTrack) {
         appAudioHandler?.skipToQueueItem(track.trackNumber - 1);
-        // await appAudioPlayer.seekTrack(track);
       }
       appAudioHandler?.play();
-      // appAudioPlayer.play();
-      // state = AppAudioPlayerState.playing(track);
 
       appAudioPlayer.currentIndexStream.listen(
         (index) {
           var newTrack = album.fetchTrackAtIndex(index);
-          // state = AppAudioPlayerState.playing(newTrack);
           if (context.router.current.path == '/track-page' ||
               context.router.current.path == '/track-more-info-page') {
             context.router.replace(TrackPageRoute(track: newTrack));
@@ -83,17 +70,27 @@ class AppAudioPlayerStateNotifier extends StateNotifier<AppAudioPlayerState> {
         },
       );
 
+    appAudioPlayer.player.playbackEventStream.listen((PlaybackEvent event) {
+    int trackNbr = appAudioPlayer.trackNumberPlaying;
+    print(event.processingState);
+    if (appAudioPlayer.isPlaying) {
+      setStateToPlay(album.fetchTrack(trackNbr));
+    }
+    // if (!appAudioPlayer.isPlaying && event == ProcessingState.completed) {
+    //   appAudioPlayerStateNotifier.setStateToInitial();
+    // }
+    if (!appAudioPlayer.isPlaying) {
+      setStateToPaused(album.fetchTrack(trackNbr));
+    }
+  });
+
       appAudioPlayer.player.playerStateStream.listen((playerState) async {
         print(playerState);
-        // if (playerState.processingState == ProcessingState.idle) {
-        //   state = const AppAudioPlayerState.paused();
-        // }
         if (playerState.processingState == ProcessingState.completed) {
           await appAudioPlayer.player.stop();
-          state = const AppAudioPlayerState.stopped();
+          // state = const AppAudioPlayerState.stopped();
           print(state);
           state = AppAudioPlayerState.initial(album.fetchTrack(1));
-          // await appAudioPlayer.seekTrack(album.fetchTrackAtIndex(0));
           print(state);
           print(appAudioPlayer.player.currentIndex);
         }
