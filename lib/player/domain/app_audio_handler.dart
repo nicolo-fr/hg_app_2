@@ -24,9 +24,11 @@ class AppAudioHandler extends BaseAudioHandler {
   Future<void> pause() => appAudioPlayer.pause();
 
   @override
-  Future<void> playNext() => appAudioPlayer.player.seekToNext();
-  @override
-  Future<void> playPrevious() => appAudioPlayer.player.seekToPrevious();
+Future<void> stop() async {
+  await appAudioPlayer.player.stop();
+  return super.stop();
+}
+
 
   void notifyAudioHandlerAboutPlaybackEvents() {
     appAudioPlayer.player.playbackEventStream.listen((PlaybackEvent event) {
@@ -69,6 +71,22 @@ Future<void> skipToQueueItem(int index) async {
   
   appAudioPlayer.player.seek(Duration.zero, index: index);
 }
+
+@override
+Future<void> skipToNext() {
+  // if (!appAudioPlayer.isPlaying) {
+  //   appAudioPlayer.play();
+  // }
+  return appAudioPlayer.player.seekToNext();
+}
+@override
+Future<void> skipToPrevious() => appAudioPlayer.player.seekToPrevious();
+
+// @override
+// Future<void> seek(Duration position) {
+//   var trackPlaying = appAudioPlayer.trackNumberPlaying;
+//   return appAudioPlayer.player.seek(position, index: trackPlaying - 1);
+// }
 
   void listenForDurationChanges() {
     appAudioPlayer.player.durationStream.listen((duration) {

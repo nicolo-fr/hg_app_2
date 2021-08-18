@@ -41,28 +41,23 @@ class TrackPageAudioController extends ConsumerWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              GestureDetector(
-                onDoubleTap: () {
+              IconButton(
+                splashRadius: 1,
+                iconSize: 40.0,
+                color: Colors.white,
+                onPressed: () {
                   if (track != albumPrvdr.fetchTrack(1)) {
-                    final previousTrack = albumPrvdr.fetchPreviousTrack(track);
-                    appRouter.replace(
-                      TrackPageRoute(
-                        track: previousTrack,
-                      ),
-                    );
-                    appAudioPlayerNotifProvider.play(previousTrack, context);
-                  }
+                  final previousTrack = albumPrvdr.fetchPreviousTrack(track);
+                  appRouter.replace(
+                    TrackPageRoute(
+                      track: previousTrack,
+                    ),
+                  );
+                  appAudioPlayerNotifProvider.play(previousTrack, context);
+                }
                 },
-                child: IconButton(
-                  splashRadius: 1,
-                  iconSize: 40.0,
-                  color: Colors.white,
-                  onPressed: () {
-                    appAudioPlayerNotifProvider.playFromStart(track, context);
-                  },
-                  icon: const Icon(
-                    Icons.skip_previous,
-                  ),
+                icon: const Icon(
+                  Icons.skip_previous,
                 ),
               ),
               IconButton(

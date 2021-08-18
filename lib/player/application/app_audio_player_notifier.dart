@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -34,6 +36,28 @@ class AppAudioPlayerStateNotifier extends StateNotifier<AppAudioPlayerState> {
 
   final Album album;
 
+
+
+  void listenToPlayerStateAndUpdateAppState(Track track) {
+    appAudioPlayer.player.playbackEventStream.listen((PlaybackEvent event) {
+    int trackNbr = appAudioPlayer.trackNumberPlaying;
+    print(event.processingState);
+    if (appAudioPlayer.isPlaying) {
+      setStateToPlay(album.fetchTrack(trackNbr));
+    }
+    if (!appAudioPlayer.isPlaying && event.processingState == ProcessingState.idle) {
+      setStateToInitial();
+    }
+    if (!appAudioPlayer.isPlaying) {
+      setStateToPaused(album.fetchTrack(trackNbr));
+    }
+    print(state);
+
+
+  });
+
+  }
+
   void setStateToPlay(Track track) {
     state = AppAudioPlayerState.playing(track);
     print('setStateToPlay state: $state');
@@ -43,8 +67,8 @@ class AppAudioPlayerStateNotifier extends StateNotifier<AppAudioPlayerState> {
     print('setStateToPause state: $state');
   }
   void setStateToInitial() {
-    state = AppAudioPlayerState.paused(album.fetchTrack(1));
-    print('setStateToPause state: ${album.fetchTrack(1)}');
+    state = AppAudioPlayerState.initial(album.fetchTrack(1));
+    print('setStateToInitial state: ${album.fetchTrack(1)}');
   }
 
  
@@ -70,19 +94,19 @@ class AppAudioPlayerStateNotifier extends StateNotifier<AppAudioPlayerState> {
         },
       );
 
-    appAudioPlayer.player.playbackEventStream.listen((PlaybackEvent event) {
-    int trackNbr = appAudioPlayer.trackNumberPlaying;
-    print(event.processingState);
-    if (appAudioPlayer.isPlaying) {
-      setStateToPlay(album.fetchTrack(trackNbr));
-    }
-    // if (!appAudioPlayer.isPlaying && event == ProcessingState.completed) {
-    //   appAudioPlayerStateNotifier.setStateToInitial();
-    // }
-    if (!appAudioPlayer.isPlaying) {
-      setStateToPaused(album.fetchTrack(trackNbr));
-    }
-  });
+  //   appAudioPlayer.player.playbackEventStream.listen((PlaybackEvent event) {
+  //   int trackNbr = appAudioPlayer.trackNumberPlaying;
+  //   print(event.processingState);
+  //   if (appAudioPlayer.isPlaying) {
+  //     setStateToPlay(album.fetchTrack(trackNbr));
+  //   }
+  //   // if (!appAudioPlayer.isPlaying && event == ProcessingState.completed) {
+  //   //   appAudioPlayerStateNotifier.setStateToInitial();
+  //   // }
+  //   if (!appAudioPlayer.isPlaying) {
+  //     setStateToPaused(album.fetchTrack(trackNbr));
+  //   }
+  // });
 
       appAudioPlayer.player.playerStateStream.listen((playerState) async {
         print(playerState);
@@ -112,23 +136,23 @@ class AppAudioPlayerStateNotifier extends StateNotifier<AppAudioPlayerState> {
   }
 
   Future<void> playNext(Track trackPlaying) async {
-    await appAudioHandler?.playNext();
+    await appAudioHandler?.skipToNext();
     var newTrack = album.fetchNextTrack(trackPlaying);
     // state = AppAudioPlayerState.playing(newTrack);
     print(state);
   }
 
   Future<void> playPrevious(Track trackPlaying) async {
-    await appAudioHandler?.playPrevious();
+    await appAudioHandler?.skipToPrevious();
     var newTrack = album.fetchPreviousTrack(trackPlaying);
     state = AppAudioPlayerState.playing(newTrack);
     print(state);
   }
 
   //TODO implement playfromstart
-  Future<void> playFromStart(Track track, BuildContext context) async {
-    appAudioPlayer.player.seek(Duration.zero);
+  // Future<void> playFromStart(Track track, BuildContext context) async {
+    // appAudioPlayer.player.seek(Duration.zero);
     // await appAudioPlayer.seekTrack(track);
     // appAudioPlayer.play();
-  }
+  // }
 }

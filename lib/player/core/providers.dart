@@ -3,6 +3,7 @@ import 'package:hg_app_2/player/application/app_audio_player_notifier.dart';
 import 'package:hg_app_2/player/domain/album.dart';
 import 'package:hg_app_2/player/domain/app_audio_player.dart';
 import 'package:hg_app_2/player/domain/app_audio_handler.dart';
+import 'package:hg_app_2/player/domain/track.dart';
 import 'package:hg_app_2/player/infrastructure/repositories/album_repository.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:just_audio/just_audio.dart';
@@ -14,18 +15,19 @@ final albumProvider = Provider<Album>(
   },
 );
 
-final appAudioPlayerProvider = Provider<AppAudioPlayer>(
+final Provider<AppAudioPlayer> appAudioPlayerProvider = Provider<AppAudioPlayer>(
   (ref) {
     const AppAudioPlayer appAudioPlayer = AppAudioPlayer();
 
     final album = ref.watch(albumProvider);
+    // final stateNotifier = ref.watch(appAudioPlayerNotifierProvider);
 
     final audioSources = album.tracks.map((track) {
       return AudioSource.uri(
         Uri.parse('asset:///assets/${track.trackPath}'),
         tag: MediaItem(
           id: track.trackNumber.toString(),
-          title: track.titleFR,
+          title: track.titleDE,
           artUri: Uri.parse('asset:///assets/images/${track.imagePath}'),
           album: 'Hänsel & Gretel',
         ),
@@ -37,6 +39,15 @@ final appAudioPlayerProvider = Provider<AppAudioPlayer>(
         children: [...audioSources],
       ),
     );
+
+    
+
+    appAudioPlayer.player.playerStateStream.listen((event) {
+      int trackNbr = appAudioPlayer.trackNumberPlaying;
+      print('trackNbr: $trackNbr');
+    });
+
+    
 
     ref.onDispose(() {
       appAudioPlayer.player.dispose();
@@ -55,7 +66,7 @@ final appAudioHandlerProvider = FutureProvider<AppAudioHandler>(
     final mediaItems = album.tracks.map((track) {
       return MediaItem(
         id: track.trackNumber.toString(),
-        title: track.titleFR,
+        title: track.titleDE,
         artUri: Uri.parse('asset:///assets/images/${track.imagePath}'),
         album: 'Hänsel & Gretel',
       );
@@ -86,6 +97,9 @@ final appAudioPlayerNotifierProvider =
             appAudioPlayer: appAudioPlayer,
             album: album,
             appAudioHandler: appAudioHandler);
+    
+    Track trackPlaying = album.fetchTrack(appAudioPlayer.trackNumberPlaying);
+    appAudioPlayerStateNotifier.listenToPlayerStateAndUpdateAppState(trackPlaying);
 
     return appAudioPlayerStateNotifier;
   },
