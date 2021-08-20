@@ -80,7 +80,6 @@ class TrackMoreInfoPageView extends StatefulWidget {
 }
 
 class _TrackMoreInfoPageViewState extends State<TrackMoreInfoPageView> {
-  @override
   late PageController controller;
   int currentPage = 0;
 
@@ -98,7 +97,6 @@ class _TrackMoreInfoPageViewState extends State<TrackMoreInfoPageView> {
 
   @override
   Widget build(BuildContext context) {
-    final appRouter = AutoRouter.of(context);
     final pageView = PageView(
       onPageChanged: (page) {
         setState(() {
@@ -144,9 +142,13 @@ class _TrackMoreInfoPageViewState extends State<TrackMoreInfoPageView> {
 }
 
 class TrackPageMoreInfoTabs extends StatefulWidget {
-  const TrackPageMoreInfoTabs(
-      {Key? key, required this.controller, required this.currentPage, required this.onTapLibretto, required this.onTapCommentary})
-      : super(key: key);
+  const TrackPageMoreInfoTabs({
+    Key? key,
+    required this.controller,
+    required this.currentPage,
+    required this.onTapLibretto,
+    required this.onTapCommentary,
+  }) : super(key: key);
 
   final PageController controller;
   final int currentPage;
@@ -158,7 +160,6 @@ class TrackPageMoreInfoTabs extends StatefulWidget {
 }
 
 class _TrackPageMoreInfoTabsState extends State<TrackPageMoreInfoTabs> {
-  
   @override
   Widget build(BuildContext context) {
     final bool _showLibretto = widget.currentPage == 0;
@@ -166,11 +167,19 @@ class _TrackPageMoreInfoTabsState extends State<TrackPageMoreInfoTabs> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        TrackPageMoreInfoTab(title: 'Livret', isOn: _showLibretto, onTap: widget.onTapLibretto,),
+        TrackPageMoreInfoTab(
+          title: 'Livret',
+          isOn: _showLibretto,
+          onTap: widget.onTapLibretto,
+        ),
         const SizedBox(
           width: 12,
         ),
-        TrackPageMoreInfoTab(title: 'Commentaires', isOn: _showCommentarySection, onTap: widget.onTapCommentary,),
+        TrackPageMoreInfoTab(
+          title: 'Commentaires',
+          isOn: _showCommentarySection,
+          onTap: widget.onTapCommentary,
+        ),
       ],
     );
   }
@@ -180,7 +189,8 @@ class TrackPageMoreInfoTab extends StatelessWidget {
   const TrackPageMoreInfoTab({
     Key? key,
     required this.title,
-    required this.isOn, required this.onTap,
+    required this.isOn,
+    required this.onTap,
   }) : super(key: key);
   final String title;
   final bool isOn;
@@ -195,16 +205,16 @@ class TrackPageMoreInfoTab extends StatelessWidget {
         decoration: BoxDecoration(
           border: Border.all(color: tabColor),
           borderRadius: BorderRadius.circular(4),
-          color: isOn ? tabColor : Colors.transparent, 
+          color: isOn ? tabColor : Colors.transparent,
         ),
         child: Center(
             child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10),
           child: Text(
             title,
-            style: TextStyle(
-              color:  Colors.white,
-              ),
+            style: const TextStyle(
+              color: Colors.white,
+            ),
           ),
         )),
       ),

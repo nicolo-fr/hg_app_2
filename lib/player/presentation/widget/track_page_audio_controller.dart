@@ -20,7 +20,6 @@ class TrackPageAudioController extends ConsumerWidget {
         ref.watch(appAudioPlayerNotifierProvider.notifier);
     final appAudioPlayerStateProvider =
         ref.watch(appAudioPlayerNotifierProvider);
-    final deviceData = MediaQuery.of(context).size;
 
     return Container(
       decoration: const BoxDecoration(

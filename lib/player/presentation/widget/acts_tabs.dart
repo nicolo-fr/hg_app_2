@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 class ActsTabs extends StatefulWidget {
   const ActsTabs({
-    Key? key,
     required this.controller,
     required this.currentPage,
   });

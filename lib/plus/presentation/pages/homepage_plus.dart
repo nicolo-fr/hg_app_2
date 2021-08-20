@@ -26,12 +26,6 @@ class HomepagePlus extends StatelessWidget {
               appRouter.push(const CreditsPageRoute());
             },
           ),
-          // CustomListTilePlus(
-          //   title: 'Équipe',
-          //   onTap: () {
-          //     appRouter.push(const TeamPageRoute());
-          //   },
-          // ),
           CustomListTilePlus(
             title: 'Remerciements',
             onTap: () {

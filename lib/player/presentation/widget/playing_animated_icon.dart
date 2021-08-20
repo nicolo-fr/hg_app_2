@@ -88,7 +88,6 @@ class _CustomSizeTransitionState extends State<CustomSizeTransition>
       child: Container(
         height: 13,
         width: 3,
-        // color: Colors.white,
         color: Theme.of(context).accentColor,
       ),
     );

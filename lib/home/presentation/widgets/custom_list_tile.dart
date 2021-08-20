@@ -52,7 +52,6 @@ class CustomListTile extends StatelessWidget {
                   ),
                 ),
                 Flexible(
-                  flex: 1,
                   child: Center(
                     child: Container(
                       height: 34,

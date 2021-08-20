@@ -25,7 +25,7 @@ class AppAudioPlayer with _$AppAudioPlayer {
 
   Future<void> seekTrack(Track track) {
     return _audioPlayer.seek(
-      const Duration(milliseconds: 0),
+      Duration.zero,
       index: track.trackNumber - 1,
     );
   }

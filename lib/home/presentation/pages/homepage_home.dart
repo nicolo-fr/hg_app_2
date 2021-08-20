@@ -8,13 +8,14 @@ import 'package:hg_app_2/home/presentation/widgets/home_image.dart';
 class HomepageHome extends StatelessWidget {
   const HomepageHome({Key? key}) : super(key: key);
 
-  final double sizedBoxHeight = 40;
+  
 
   @override
   Widget build(BuildContext context) {
+    const double sizedBoxHeight = 40;
     final appRouter = AutoRouter.of(context);
     return SingleChildScrollView(
-      physics: BouncingScrollPhysics(),
+      physics: const BouncingScrollPhysics(),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -24,10 +25,11 @@ class HomepageHome extends StatelessWidget {
           const HomeImage(
             imagePath: 'assets/images/home.jpg',
           ),
-          SizedBox(
+          const SizedBox(
             height: sizedBoxHeight,
           ),
           CustomListTile(
+            // ignore: avoid_escaping_inner_quotes
             title: 'Histoire de l\'œuvre',
             description:
                 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut',
@@ -36,7 +38,7 @@ class HomepageHome extends StatelessWidget {
               // print('card pressed');
             },
           ),
-          SizedBox(
+          const SizedBox(
             height: sizedBoxHeight,
           ),
           CustomListTile(
@@ -48,10 +50,11 @@ class HomepageHome extends StatelessWidget {
               appRouter.push(const HumperdincksBioPageRoute());
             },
           ),
-          SizedBox(
+          const SizedBox(
             height: sizedBoxHeight,
           ),
           CustomListTile(
+            // ignore: avoid_escaping_inner_quotes
             title: 'L\'enregistrement',
             description:
                 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut',
@@ -59,7 +62,7 @@ class HomepageHome extends StatelessWidget {
               appRouter.push(const RecordingHistoryPageRoute());
             },
           ),
-          SizedBox(
+          const SizedBox(
             height: sizedBoxHeight,
           ),
         ],

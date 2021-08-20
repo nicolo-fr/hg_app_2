@@ -7,12 +7,12 @@ class LoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var safePadding = MediaQuery.of(context).padding.top;
-    double paddingValue = 24;
+    final safePadding = MediaQuery.of(context).padding.top;
+    const double paddingValue = 24;
     return Scaffold(
       backgroundColor: Theme.of(context).accentColor,
       body: Padding(
-        padding: EdgeInsets.all(paddingValue),
+        padding: const EdgeInsets.all(paddingValue),
         child: SafeArea(
           child: SingleChildScrollView(
             child: Container(
@@ -43,11 +43,13 @@ class LoginPage extends StatelessWidget {
                       height: 40,
                     ),
                     const Text(
+                        // ignore: avoid_escaping_inner_quotes
                         'Bienvenue ! Cette application a été conçue pour vous permettre d\'écouter la musique en même temps que vous lisez le livret illustré de l\'opéra Hansel & Gretel. Vous y trouverez également des articles présentant l\'oeuvre et l\'enregistrement.'),
                     const SizedBox(
                       height: 8,
                     ),
                     const Text(
+                        // ignore: avoid_escaping_inner_quotes
                         'Pour accéder à l\'application, veuillez renseigner le mot de passe indiqué en 3e de couverture.'),
                     const SizedBox(
                       height: 8,
@@ -139,7 +141,7 @@ class _PasswordFormState extends State<PasswordForm> {
         borderSide:  BorderSide(color: Theme.of(context).accentColor ),
 
       ),
-              border: OutlineInputBorder(),
+              border: const OutlineInputBorder(),
               
             ),
           ),

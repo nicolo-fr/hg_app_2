@@ -4,7 +4,6 @@ import 'package:hg_app_2/core/routes/app_router.gr.dart';
 import 'package:hg_app_2/player/core/providers.dart';
 import 'package:hg_app_2/player/domain/track.dart';
 import 'package:hg_app_2/player/presentation/widget/playing_animated_icon.dart';
-import 'package:hg_app_2/plus/presentation/pages/acknowledgements_page.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class TrackItemBuilder extends ConsumerWidget {
@@ -36,21 +35,18 @@ class TrackItemBuilder extends ConsumerWidget {
       Icons.play_circle_fill,
       color: Colors.black26,
     );
-    final Icon equalizerIcon = Icon(
-      Icons.equalizer,
-      color: Theme.of(context).accentColor,
-    );
 
     final Widget icon = appAudioPlayerStateProvider.maybeWhen(orElse: () {
       return playIcon;
     }, playing: (trackPlaying) {
       if (trackPlaying == track) {
-        return PlayingAnimatedIcon();
+        return const PlayingAnimatedIcon();
       }
       return playIcon;
     });
 
     return ListTile(
+      // ignore: sized_box_for_whitespace
       leading: Container(
         width: 56,
         child: Padding(

@@ -84,18 +84,6 @@ class BottomStickyPlayer extends ConsumerWidget {
       );
     }
 
-    // Widget getPositionIndicator() {
-    //   return appAudioPlayerStateProvider.maybeWhen(
-    //     initial: (track) => Container(),
-    //     stopped: () => Container(),
-    //     orElse: () => PositionIndicator(
-    //       width: deviceData.width - imagePreviewWidth,
-    //       height: imagePreviewHeight,
-    //       color: Theme.of(context).accentColor.withOpacity(0.25),
-    //     ),
-    //   );
-    // }
-
     return GestureDetector(
       onTap: navigateToTrackPage(),
       child: Container(

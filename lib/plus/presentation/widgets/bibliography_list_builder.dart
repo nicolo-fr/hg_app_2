@@ -10,7 +10,7 @@ class BibliographyListBuilder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      physics: NeverScrollableScrollPhysics(),
+      physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
       itemCount: bibliographyReferences.length,
       itemBuilder: (ctx, index) {

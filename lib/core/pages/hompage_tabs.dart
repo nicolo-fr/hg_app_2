@@ -4,7 +4,6 @@ import 'package:hg_app_2/player/presentation/widget/bottom_sticky_player.dart';
 import 'package:hg_app_2/plus/presentation/pages/homepage_plus.dart';
 
 import '../../player/presentation/pages/homepage_opera.dart';
-import 'homepage_scan.dart';
 
 class HomepageTabs extends StatelessWidget {
   const HomepageTabs({Key? key}) : super(key: key);
@@ -27,10 +26,10 @@ class _TabScreenState extends State<TabScreen> {
   @override
   void initState() {
     _pages = [
-      {'page': HomepageHome()},
-      {'page': HomepageOpera()},
+      {'page': const HomepageHome()},
+      {'page': const HomepageOpera()},
       // {'page': HomepageScan()},
-      {'page': HomepagePlus()},
+      {'page': const HomepagePlus()},
     ];
     super.initState();
   }

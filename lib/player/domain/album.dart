@@ -18,10 +18,6 @@ class Album with _$Album {
 
   int get length => tracks.length;
 
-  // Track fetchTrack1() {
-  //   return tracks[0];
-  // }
-
   Track fetchTrack(int trackNumber) {
     return tracks[trackNumber - 1];
   }

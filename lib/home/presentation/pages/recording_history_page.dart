@@ -9,6 +9,7 @@ class RecordingHistoryPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return const ArticlePageLayout(
       imagePath: 'assets/images/karajan.png',
+      // ignore: avoid_escaping_inner_quotes
       title: 'L\'enregistrement',
       children: [
         ArticleParagraphBuilder(

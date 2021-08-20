@@ -26,7 +26,7 @@ class CreditsPage extends ConsumerWidget {
         elevation: 0,
       ),
       body: SingleChildScrollView(
-        physics: BouncingScrollPhysics(),
+        physics: const BouncingScrollPhysics(),
         child: SafeArea(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24.0),
@@ -80,32 +80,18 @@ class CreditsListBuilder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //  List<CreditsItemBuilder> creditsItemsList = [];
-
-    // for (var entry in albumCastData.entries) {
-    //   var newEntry = CreditsItemBuilder(
-    //     role: entry.key,
-    //     name: entry.value,
-    //   );
-    //   creditsItemsList.add(newEntry);
-    // }
-
-    // return Column(
-    //   children: [
-    //   ...creditsItemsList
-    // ],);
-
     return ListView.builder(
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        itemCount: map.length,
-        itemBuilder: (ctx, i) {
-          String key = map.keys.elementAt(i);
-          return CreditsItemBuilder(
-            role: key,
-            name: map[key]!,
-          );
-        });
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: map.length,
+      itemBuilder: (ctx, i) {
+        final String key = map.keys.elementAt(i);
+        return CreditsItemBuilder(
+          role: key,
+          name: map[key]!,
+        );
+      },
+    );
   }
 }
 

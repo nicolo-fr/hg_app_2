@@ -17,7 +17,8 @@ class CommentaryBuilder extends StatelessWidget {
             itemCount: track.commentary?.length,
             itemBuilder: (ctx, i) {
               return Padding(
-                padding: const EdgeInsets.only(bottom: 24.0, left: 16, right: 16),
+                padding:
+                    const EdgeInsets.only(bottom: 24.0, left: 16, right: 16),
                 child: Text(
                   track.commentary![i],
                   style: const TextStyle(color: Colors.white, height: 1.5),
@@ -26,8 +27,16 @@ class CommentaryBuilder extends StatelessWidget {
             },
           )
         : const Padding(
-          padding:  EdgeInsets.symmetric(horizontal: 16.0,),
-          child: Text('Aucun commentaire. Laissez-vous porter par la musique !', style: TextStyle(fontSize: 16, color: Colors.white),),
-        );
+            padding: EdgeInsets.symmetric(
+              horizontal: 16.0,
+            ),
+            child: Text(
+              'Aucun commentaire. Laissez-vous porter par la musique !',
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.white,
+              ),
+            ),
+          );
   }
 }

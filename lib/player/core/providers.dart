@@ -15,7 +15,8 @@ final albumProvider = Provider<Album>(
   },
 );
 
-final Provider<AppAudioPlayer> appAudioPlayerProvider = Provider<AppAudioPlayer>(
+final Provider<AppAudioPlayer> appAudioPlayerProvider =
+    Provider<AppAudioPlayer>(
   (ref) {
     const AppAudioPlayer appAudioPlayer = AppAudioPlayer();
 
@@ -28,7 +29,7 @@ final Provider<AppAudioPlayer> appAudioPlayerProvider = Provider<AppAudioPlayer>
         tag: MediaItem(
           id: track.trackNumber.toString(),
           title: track.titleDE,
-          artUri: Uri.parse('asset:///assets/images/${track.imagePath}'),
+          artUri: Uri.parse('asset:///${track.imagePath}'),
           album: 'Hänsel & Gretel',
         ),
       );
@@ -40,18 +41,11 @@ final Provider<AppAudioPlayer> appAudioPlayerProvider = Provider<AppAudioPlayer>
       ),
     );
 
-    
-
-    appAudioPlayer.player.playerStateStream.listen((event) {
-      int trackNbr = appAudioPlayer.trackNumberPlaying;
-      print('trackNbr: $trackNbr');
-    });
-
-    
-
-    ref.onDispose(() {
-      appAudioPlayer.player.dispose();
-    });
+    ref.onDispose(
+      () {
+        appAudioPlayer.player.dispose();
+      },
+    );
 
     return appAudioPlayer;
   },
@@ -67,7 +61,7 @@ final appAudioHandlerProvider = FutureProvider<AppAudioHandler>(
       return MediaItem(
         id: track.trackNumber.toString(),
         title: track.titleDE,
-        artUri: Uri.parse('asset:///assets/images/${track.imagePath}'),
+        artUri: Uri.parse('asset:///${track.imagePath}'),
         album: 'Hänsel & Gretel',
       );
     }).toList();
@@ -77,9 +71,11 @@ final appAudioHandlerProvider = FutureProvider<AppAudioHandler>(
     _appAudioHandler.listenForDurationChanges();
     _appAudioHandler.listenForCurrentSongIndexChanges();
 
-    ref.onDispose(() {
-      _appAudioHandler.stop();
-    });
+    ref.onDispose(
+      () {
+        _appAudioHandler.stop();
+      },
+    );
 
     return _appAudioHandler;
   },
@@ -97,9 +93,10 @@ final appAudioPlayerNotifierProvider =
             appAudioPlayer: appAudioPlayer,
             album: album,
             appAudioHandler: appAudioHandler);
-    
-    Track trackPlaying = album.fetchTrack(appAudioPlayer.trackNumberPlaying);
-    appAudioPlayerStateNotifier.listenToPlayerStateAndUpdateAppState(trackPlaying);
+
+    final Track trackPlaying = album.fetchTrack(appAudioPlayer.trackNumberPlaying);
+    appAudioPlayerStateNotifier
+        .listenToPlayerStateAndUpdateAppState(trackPlaying);
 
     return appAudioPlayerStateNotifier;
   },

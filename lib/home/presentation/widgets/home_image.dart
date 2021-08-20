@@ -11,6 +11,7 @@ final String imagePath;
   @override
   Widget build(BuildContext context) {
     final deviceData = MediaQuery.of(context);
+    // ignore: sized_box_for_whitespace
     return Container(
       height: deviceData.size.height - 317,
       width: deviceData.size.width,

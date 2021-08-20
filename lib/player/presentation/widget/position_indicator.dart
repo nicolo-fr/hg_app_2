@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:hg_app_2/core/routes/app_router.dart';
 import 'package:hg_app_2/player/core/providers.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 

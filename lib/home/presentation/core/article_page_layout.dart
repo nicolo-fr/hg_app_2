@@ -1,4 +1,3 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:hg_app_2/core/presentation/custom_leading_widget_appbar.dart';
 
@@ -25,10 +24,8 @@ class ArticlePageLayout extends StatelessWidget {
             leading: const CustomLeadingWidgetAppBar(),
             elevation: 0,
             expandedHeight: 250,
-            floating: false,
-            pinned: false,
-            snap: false,
             flexibleSpace: FlexibleSpaceBar(
+              // ignore: prefer_const_literals_to_create_immutables
               stretchModes: [StretchMode.zoomBackground],
               centerTitle: false,
               // title: Text('Running running'),

@@ -48,8 +48,8 @@ class LibrettoBuilder extends StatelessWidget {
     return _hasLibrettoText
         ? ListView.builder(
           // physics: NeverScrollableScrollPhysics(),
-          physics: BouncingScrollPhysics(),
-          padding: EdgeInsets.all(0.0),
+          physics: const BouncingScrollPhysics(),
+          padding: const EdgeInsets.all(0.0),
           shrinkWrap: true,
           itemCount: track.librettoFR!.length,
           itemBuilder: (ctx, index) {
