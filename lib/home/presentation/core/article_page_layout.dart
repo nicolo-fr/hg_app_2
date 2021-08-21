@@ -15,6 +15,7 @@ class ArticlePageLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final silverAppBarHeight = MediaQuery.of(context).size.height / 3.3;
     return Scaffold(
       body: CustomScrollView(
         physics: const BouncingScrollPhysics(),
@@ -23,7 +24,7 @@ class ArticlePageLayout extends StatelessWidget {
             stretch: true,
             leading: const CustomLeadingWidgetAppBar(),
             elevation: 0,
-            expandedHeight: 250,
+            expandedHeight: silverAppBarHeight,
             flexibleSpace: FlexibleSpaceBar(
               // ignore: prefer_const_literals_to_create_immutables
               stretchModes: [StretchMode.zoomBackground],

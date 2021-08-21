@@ -9,10 +9,10 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 class BottomStickyPlayer extends ConsumerWidget {
   const BottomStickyPlayer({Key? key}) : super(key: key);
 
-  static const double bottomStickyPlayerHeight = 68;
+  static double bottomStickyPlayerHeight = getBottomStickyPlayerHeight();
 
   static const double imagePreviewWidth = 84;
-  static const double imagePreviewHeight = bottomStickyPlayerHeight;
+  static double imagePreviewHeight = bottomStickyPlayerHeight;
 
   @override
   Widget build(BuildContext context, WidgetReference ref) {
@@ -53,6 +53,7 @@ class BottomStickyPlayer extends ConsumerWidget {
         initial: (track) => CustomIconButton(
           onPressed: () {
             appAudioPlayerNotifProvider.play(track, context);
+
           },
           iconData: Icons.play_circle_fill,
         ),
@@ -92,7 +93,7 @@ class BottomStickyPlayer extends ConsumerWidget {
         ),
         height: 68,
         child: Row(children: [
-          const ImagePreview(
+           ImagePreview(
             imagePreviewWidth: imagePreviewWidth,
             imagePreviewHeight: imagePreviewHeight,
           ),

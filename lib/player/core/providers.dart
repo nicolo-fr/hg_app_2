@@ -1,4 +1,5 @@
 import 'package:audio_service/audio_service.dart';
+import 'package:flutter/material.dart';
 import 'package:hg_app_2/player/application/app_audio_player_notifier.dart';
 import 'package:hg_app_2/player/domain/album.dart';
 import 'package:hg_app_2/player/domain/app_audio_player.dart';
@@ -21,7 +22,6 @@ final Provider<AppAudioPlayer> appAudioPlayerProvider =
     const AppAudioPlayer appAudioPlayer = AppAudioPlayer();
 
     final album = ref.watch(albumProvider);
-    // final stateNotifier = ref.watch(appAudioPlayerNotifierProvider);
 
     final audioSources = album.tracks.map((track) {
       return AudioSource.uri(
@@ -123,3 +123,13 @@ final appAudioPlayerPosition = StreamProvider.autoDispose<Duration>(
     }
   },
 );
+
+double getTopPaddingHeight(BuildContext context) {
+  final deviceHeight = MediaQuery.of(context).size.height;
+  double topPaddingHeight = deviceHeight * 0.09;
+  return topPaddingHeight;
+}
+double getBottomStickyPlayerHeight() {
+  const double bottomStickyPlayerHeight = 68;
+  return bottomStickyPlayerHeight;
+}

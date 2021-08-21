@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hg_app_2/player/core/providers.dart';
 
 class PageLayout extends StatelessWidget {
   final String title;
@@ -10,7 +11,7 @@ class PageLayout extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Padding(
-        padding: const EdgeInsets.only(left: 24.0, top: 72, right: 24),
+        padding: EdgeInsets.only(left: 24.0, top: getTopPaddingHeight(context), right: 24),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

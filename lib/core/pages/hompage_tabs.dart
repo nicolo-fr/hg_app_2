@@ -42,6 +42,8 @@ class _TabScreenState extends State<TabScreen> {
 
   @override
   Widget build(BuildContext context) {
+  final bottomPadding = MediaQuery.of(context).padding.bottom;
+  print('bottomPadding: $bottomPadding');
     return Scaffold(
       backgroundColor: Colors.white,
       body: _pages?[_selectedPageIndex]['page'],
