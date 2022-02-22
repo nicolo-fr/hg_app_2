@@ -53,9 +53,12 @@ class _TabScreenState extends State<TabScreen> {
         children: [
           const BottomStickyPlayer(),
           BottomNavigationBar(
-            backgroundColor: Theme.of(context).primaryColor,
+            elevation: 0,
+            backgroundColor: const Color(0xffF7F7F7),
+            // backgroundColor: Theme.of(context).primaryColor,
             onTap: _selectPage,
-            unselectedItemColor: Colors.white,
+            unselectedItemColor: Colors.black,
+            // selectedItemColor: Colors.white,
             selectedItemColor: Theme.of(context).accentColor,
             currentIndex: _selectedPageIndex,
             type: BottomNavigationBarType.fixed,

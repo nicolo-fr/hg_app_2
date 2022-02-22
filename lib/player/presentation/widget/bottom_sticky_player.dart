@@ -89,7 +89,9 @@ class BottomStickyPlayer extends ConsumerWidget {
       onTap: navigateToTrackPage(),
       child: Container(
         decoration: const BoxDecoration(
-          color: Color(0xffF7F7F7),
+          // color: Color(0xffF7F7F7),
+          color: Colors.white,
+          boxShadow:  [BoxShadow(blurRadius: 1, spreadRadius: 2, color: Color(0xffF7F7F7))],
         ),
         height: 68,
         child: Row(children: [
